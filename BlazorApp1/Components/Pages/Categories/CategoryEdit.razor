@@ -1,4 +1,4 @@
-﻿@page "/categories/edit/{id}"
+@page "/categories/edit/{id}"
 @rendermode InteractiveServer
 @inject CategoryService CategoryService
 @inject NavigationManager Nav
@@ -26,13 +26,19 @@ else
             <InputText class="form-control" @bind-Value="category.Description" />
         </div>
 
-        <button type="submit" class="btn btn-warning">Update</button>
-        <a href="/categories" class="btn btn-secondary ms-2">Cancel</a>
+        <button type="submit" class="btn btn-warning">
+            Update
+        </button>
+
+        <a href="/categories" class="btn btn-secondary ms-2">
+            Cancel
+        </a>
     </EditForm>
 }
 
 @code {
-    [Parameter] public string Id { get; set; } = string.Empty;
+    [Parameter]
+    public string Id { get; set; } = string.Empty;
 
     private Category? category;
 
@@ -44,6 +50,7 @@ else
     private async Task HandleSubmit()
     {
         await CategoryService.UpdateAsync(Id, category!);
+
         Nav.NavigateTo("/categories");
     }
 }
