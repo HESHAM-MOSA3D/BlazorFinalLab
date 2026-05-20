@@ -1,4 +1,4 @@
-﻿@page "/courses"
+@page "/courses"
 @rendermode InteractiveServer
 @inject CourseService CourseService
 @inject NavigationManager Nav
@@ -7,7 +7,9 @@
 
 <h3>Courses</h3>
 
-<a href="/courses/create" class="btn btn-primary mb-3">+ Add New</a>
+<a href="/courses/create" class="btn btn-primary mb-3">
+    + Add New
+</a>
 
 @if (courses == null)
 {
@@ -29,6 +31,7 @@ else
                 <th>Actions</th>
             </tr>
         </thead>
+
         <tbody>
             @foreach (var course in courses)
             {
@@ -37,8 +40,13 @@ else
                     <td>@course.Description</td>
                     <td>@course.Price</td>
                     <td>@course.CategoryId</td>
+
                     <td>
-                        <a href="/courses/edit/@course.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="/courses/edit/@course.Id"
+                           class="btn btn-sm btn-warning">
+                            Edit
+                        </a>
+
                         <button class="btn btn-sm btn-danger"
                                 @onclick="() => ConfirmDelete(course.Id)">
                             Delete
@@ -53,15 +61,25 @@ else
 @if (showConfirm)
 {
     <div class="alert alert-danger mt-3">
-        <p>are you sure!!!!!!!!</p>
-        <button class="btn btn-danger" @onclick="DeleteConfirmed">نعم، احذف</button>
-        <button class="btn btn-secondary ms-2" @onclick="CancelDelete">إلغاء</button>
+        <p>Are you sure?</p>
+
+        <button class="btn btn-danger"
+                @onclick="DeleteConfirmed">
+            Yes, Delete
+        </button>
+
+        <button class="btn btn-secondary ms-2"
+                @onclick="CancelDelete">
+            Cancel
+        </button>
     </div>
 }
 
 @code {
     private List<Course>? courses;
+
     private bool showConfirm = false;
+
     private string selectedId = string.Empty;
 
     protected override async Task OnInitializedAsync()
@@ -72,19 +90,23 @@ else
     private void ConfirmDelete(string id)
     {
         selectedId = id;
+
         showConfirm = true;
     }
 
     private void CancelDelete()
     {
         showConfirm = false;
+
         selectedId = string.Empty;
     }
 
     private async Task DeleteConfirmed()
     {
         await CourseService.DeleteAsync(selectedId);
+
         showConfirm = false;
+
         courses = await CourseService.GetAllAsync();
     }
 }
