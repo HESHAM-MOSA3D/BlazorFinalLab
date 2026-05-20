@@ -1,8 +1,3 @@
-﻿<h3>CourseEdit</h3>
-
-@code {
-
-}
 @page "/courses/edit/{id}"
 @rendermode InteractiveServer
 @inject CourseService CourseService
@@ -39,8 +34,10 @@ else
 
         <div class="mb-3">
             <label>Category</label>
+
             <InputSelect class="form-control" @bind-Value="course.CategoryId">
-                <option value="">select_Category</option>
+                <option value="">Select Category</option>
+
                 @if (categories != null)
                 {
                     @foreach (var cat in categories)
@@ -51,26 +48,35 @@ else
             </InputSelect>
         </div>
 
-        <button type="submit" class="btn btn-warning">Update</button>
-        <a href="/courses" class="btn btn-secondary ms-2">Cancel</a>
+        <button type="submit" class="btn btn-warning">
+            Update
+        </button>
+
+        <a href="/courses" class="btn btn-secondary ms-2">
+            Cancel
+        </a>
     </EditForm>
 }
 
 @code {
-    [Parameter] public string Id { get; set; } = string.Empty;
+    [Parameter]
+    public string Id { get; set; } = string.Empty;
 
     private Course? course;
+
     private List<Category>? categories;
 
     protected override async Task OnInitializedAsync()
     {
         course = await CourseService.GetByIdAsync(Id);
+
         categories = await CategoryService.GetAllAsync();
     }
 
     private async Task HandleSubmit()
     {
         await CourseService.UpdateAsync(Id, course!);
+
         Nav.NavigateTo("/courses");
     }
 }
