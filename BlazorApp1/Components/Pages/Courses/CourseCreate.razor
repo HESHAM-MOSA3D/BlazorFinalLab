@@ -1,0 +1,61 @@
+﻿@page "/courses/create"
+@rendermode InteractiveServer
+@inject CourseService CourseService
+@inject CategoryService CategoryService
+@inject NavigationManager Nav
+@using BlazorApp1.Models
+@using BlazorApp1.Services
+
+<h3>Add Course</h3>
+
+<EditForm Model="course" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>Title</label>
+        <InputText class="form-control" @bind-Value="course.Title" />
+    </div>
+
+    <div class="mb-3">
+        <label>Description</label>
+        <InputText class="form-control" @bind-Value="course.Description" />
+    </div>
+
+    <div class="mb-3">
+        <label>Price</label>
+        <InputNumber class="form-control" @bind-Value="course.Price" />
+    </div>
+
+    <div class="mb-3">
+        <label>Category</label>
+        <InputSelect class="form-control" @bind-Value="course.CategoryId">
+            <option value="">-- Select Category --</option>
+            @if (categories != null)
+            {
+                @foreach (var cat in categories)
+                {
+                    <option value="@cat.Id">@cat.Name</option>
+                }
+            }
+        </InputSelect>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="/courses" class="btn btn-secondary ms-2">Cancel</a>
+</EditForm>
+
+@code {
+    private Course course = new();
+    private List<Category>? categories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await CategoryService.GetAllAsync();
+    }
+
+    private async Task HandleSubmit()
+    {
+        await CourseService.CreateAsync(course);
+        Nav.NavigateTo("/courses");
+    }
+}

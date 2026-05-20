@@ -1,0 +1,49 @@
+﻿@page "/categories/edit/{id}"
+@rendermode InteractiveServer
+@inject CategoryService CategoryService
+@inject NavigationManager Nav
+@using BlazorApp1.Models
+@using BlazorApp1.Services
+
+<h3>Edit Category</h3>
+
+@if (category == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="category" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+
+        <div class="mb-3">
+            <label>Name</label>
+            <InputText class="form-control" @bind-Value="category.Name" />
+        </div>
+
+        <div class="mb-3">
+            <label>Description</label>
+            <InputText class="form-control" @bind-Value="category.Description" />
+        </div>
+
+        <button type="submit" class="btn btn-warning">Update</button>
+        <a href="/categories" class="btn btn-secondary ms-2">Cancel</a>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public string Id { get; set; } = string.Empty;
+
+    private Category? category;
+
+    protected override async Task OnInitializedAsync()
+    {
+        category = await CategoryService.GetByIdAsync(Id);
+    }
+
+    private async Task HandleSubmit()
+    {
+        await CategoryService.UpdateAsync(Id, category!);
+        Nav.NavigateTo("/categories");
+    }
+}

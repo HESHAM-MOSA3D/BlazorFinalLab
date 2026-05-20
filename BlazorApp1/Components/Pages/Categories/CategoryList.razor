@@ -1,0 +1,86 @@
+﻿@page "/categories"
+@rendermode InteractiveServer
+@inject CategoryService CategoryService
+@inject NavigationManager Nav
+@using BlazorApp1.Models
+@using BlazorApp1.Services
+
+<h3>Categories</h3>
+
+<a href="/categories/create" class="btn btn-primary mb-3">+ Add New</a>
+
+@if (categories == null)
+{
+    <p>Loading...</p>
+}
+else if (!categories.Any())
+{
+    <p>No categories found.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cat in categories)
+            {
+                <tr>
+                    <td>@cat.Name</td>
+                    <td>@cat.Description</td>
+                    <td>
+                        <a href="/categories/edit/@cat.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <button class="btn btn-sm btn-danger"
+                                @onclick="() => ConfirmDelete(cat.Id)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (showConfirm)
+{
+    <div class="alert alert-danger mt-3">
+        <p>are you sure!!! </p>
+        <button class="btn btn-danger" @onclick="DeleteConfirmed">نعم، احذف</button>
+        <button class="btn btn-secondary ms-2" @onclick="CancelDelete">إلغاء</button>
+    </div>
+}
+
+@code {
+    private List<Category>? categories;
+    private bool showConfirm = false;
+    private string selectedId = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await CategoryService.GetAllAsync();
+    }
+
+    private void ConfirmDelete(string id)
+    {
+        selectedId = id;
+        showConfirm = true;
+    }
+
+    private void CancelDelete()
+    {
+        showConfirm = false;
+        selectedId = string.Empty;
+    }
+
+    private async Task DeleteConfirmed()
+    {
+        await CategoryService.DeleteAsync(selectedId);
+        showConfirm = false;
+        categories = await CategoryService.GetAllAsync();
+    }
+}
