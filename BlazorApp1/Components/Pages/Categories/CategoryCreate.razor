@@ -1,11 +1,11 @@
-﻿@page "/categories/create"
+@page "/categories/create"
 @rendermode InteractiveServer
 @inject CategoryService CategoryService
 @inject NavigationManager Nav
 @using BlazorApp1.Models
 @using BlazorApp1.Services
 
-<h3>Add Category</h3>
+<h3>Create Category</h3>
 
 <EditForm Model="category" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator />
@@ -20,8 +20,13 @@
         <InputText class="form-control" @bind-Value="category.Description" />
     </div>
 
-    <button type="submit" class="btn btn-success">Save</button>
-    <a href="/categories" class="btn btn-secondary ms-2">Cancel</a>
+    <button type="submit" class="btn btn-success">
+        Save
+    </button>
+
+    <a href="/categories" class="btn btn-secondary ms-2">
+        Cancel
+    </a>
 </EditForm>
 
 @code {
@@ -30,6 +35,7 @@
     private async Task HandleSubmit()
     {
         await CategoryService.CreateAsync(category);
+
         Nav.NavigateTo("/categories");
     }
 }
