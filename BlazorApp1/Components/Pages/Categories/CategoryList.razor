@@ -1,4 +1,4 @@
-﻿@page "/categories"
+@page "/categories"
 @rendermode InteractiveServer
 @inject CategoryService CategoryService
 @inject NavigationManager Nav
@@ -35,6 +35,7 @@ else
                     <td>@cat.Description</td>
                     <td>
                         <a href="/categories/edit/@cat.Id" class="btn btn-sm btn-warning">Edit</a>
+
                         <button class="btn btn-sm btn-danger"
                                 @onclick="() => ConfirmDelete(cat.Id)">
                             Delete
@@ -49,9 +50,15 @@ else
 @if (showConfirm)
 {
     <div class="alert alert-danger mt-3">
-        <p>are you sure!!! </p>
-        <button class="btn btn-danger" @onclick="DeleteConfirmed">نعم، احذف</button>
-        <button class="btn btn-secondary ms-2" @onclick="CancelDelete">إلغاء</button>
+        <p>Are you sure?</p>
+
+        <button class="btn btn-danger" @onclick="DeleteConfirmed">
+            Yes, Delete
+        </button>
+
+        <button class="btn btn-secondary ms-2" @onclick="CancelDelete">
+            Cancel
+        </button>
     </div>
 }
 
@@ -80,7 +87,9 @@ else
     private async Task DeleteConfirmed()
     {
         await CategoryService.DeleteAsync(selectedId);
+
         showConfirm = false;
+
         categories = await CategoryService.GetAllAsync();
     }
 }
