@@ -1,4 +1,4 @@
-﻿@page "/courses/create"
+@page "/courses/create"
 @rendermode InteractiveServer
 @inject CourseService CourseService
 @inject CategoryService CategoryService
@@ -6,7 +6,7 @@
 @using BlazorApp1.Models
 @using BlazorApp1.Services
 
-<h3>Add Course</h3>
+<h3>Create Course</h3>
 
 <EditForm Model="course" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator />
@@ -28,8 +28,10 @@
 
     <div class="mb-3">
         <label>Category</label>
+
         <InputSelect class="form-control" @bind-Value="course.CategoryId">
-            <option value="">-- Select Category --</option>
+            <option value="">Select Category</option>
+
             @if (categories != null)
             {
                 @foreach (var cat in categories)
@@ -40,12 +42,18 @@
         </InputSelect>
     </div>
 
-    <button type="submit" class="btn btn-success">Save</button>
-    <a href="/courses" class="btn btn-secondary ms-2">Cancel</a>
+    <button type="submit" class="btn btn-success">
+        Save
+    </button>
+
+    <a href="/courses" class="btn btn-secondary ms-2">
+        Cancel
+    </a>
 </EditForm>
 
 @code {
     private Course course = new();
+
     private List<Category>? categories;
 
     protected override async Task OnInitializedAsync()
@@ -56,6 +64,7 @@
     private async Task HandleSubmit()
     {
         await CourseService.CreateAsync(course);
+
         Nav.NavigateTo("/courses");
     }
 }
